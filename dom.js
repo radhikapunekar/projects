@@ -1,10 +1,3 @@
-//console.dir(document);
-//console.log(document.domain);
-//console.log(document.URL);
-//document.title=123;
-//console.log(document.all);
-//console.log(document.forms[0]);
-
 
 //GETELEMENTBYID//
 //console.log(document.getElementById('header-title'));
@@ -24,4 +17,15 @@ items[2].style.backgroundColor='green';
 
 for(let i=0;i<items.length;i++){
     items[i].style.fontWeight = 'bold';
+}
+
+//GETELEMENTBYTAGNAME//
+let li=document.getElementsByTagName('li');
+console.log(li);
+console.log(li[1]);
+li[1].textContent='Hello 2';
+li[1].style.fontWeight='bold';
+li[1].style.backgroundColor='yellow';
+for(let i=0;i<li.length;i++){
+    li[i].style.backgroundColor='#f4f4f4';
 }
