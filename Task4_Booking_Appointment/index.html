@@ -36,13 +36,21 @@
 
     <script>
         function saveToLocalStorage(event){
-            event.preventDefault();
-            const name=event.target.username.value;
-            const email=event.target.emailId.value;
-            const phonenumber = event.target.phonenumber.value;
-            localStorage.setItem('name',name);
-            localStorage.setItem('email',email);
-            localStorage.setItem('phonenumber',phonenumber);
+          
+           event.preventDefault();
+           const name=event.target.username.value;
+           const email=event.target.emailId.value;
+           const phonenumber = event.target.phonenumber.value;
+           // localStorage.setItem('name',name);
+           // localStorage.setItem('email',email);
+           // localStorage.setItem('phonenumber',phonenumber);
+          const userdetails = {
+            name,email,phonenumber
+           };
+           let userdetails_serialized = JSON.stringify(userdetails);
+           localStorage.setItem("userdetails",userdetails_serialized);
+           console.log(JSON.parse(localStorage.getItem("userdetails")));
+           
         }
     </script>
   </body>
