@@ -32,26 +32,37 @@
       </div>
         <input class="btn" type="submit" value="Submit">
       </form>
-    
+       <h2>List of Users</h2>
+       <ul id="list-of-users"></ul>
+    </section>
 
     <script>
+  
         function saveToLocalStorage(event){
-          
            event.preventDefault();
-           const name=event.target.username.value;
-           const email=event.target.emailId.value;
-           const phonenumber = event.target.phonenumber.value;
-           // localStorage.setItem('name',name);
-           // localStorage.setItem('email',email);
-           // localStorage.setItem('phonenumber',phonenumber);
-          const userdetails = {
-            name,email,phonenumber
-           };
-           let userdetails_serialized = JSON.stringify(userdetails);
-           localStorage.setItem("userdetails",userdetails_serialized);
-           console.log(JSON.parse(localStorage.getItem("userdetails")));
+           let Name= event.target.name.value;
+           let Email = event.target.email.value;
+           let Number= event.target.phonenumber.value;
+           // console.log(Name);
+           // console.log(Email);
+           // console.log(Number );
+           //localStorage.setItem('username',Name);
+          // localStorage.setItem('email',Email);
+          // localStorage.setItem('number',Number);
+           const obj ={Name,Email,Number}
+           localStorage.setItem('userDetails',JSON.stringify(obj));
+           localStorage.setItem(obj.Name, JSON.stringify(obj));
+       
+           showNewUserOnScreen(obj);
+       
+       }   
+       function showNewUserOnScreen(user){
+           const parentNode = document.getElementById('list-of-users');
+           const childHTML = `<li> ${user.Name} - ${user.Email} - ${user.Number} </li>`
+           parentNode.innerHTML = parentNode.innerHTML +childHTML;
+       }
            
-        }
-    </script>
+        
+     </script>
   </body>
 </html>
