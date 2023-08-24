@@ -64,12 +64,31 @@
            const deleteButton = document.createElement('input');
            deleteButton.type="button";
            deleteButton.value='Delete';
+
+           const editBtn=document.createElement('input');
+           editBtn.type="button";
+           editBtn.value='Edit';
            deleteButton.onclick=() => {
-            localStorage.removeItem(user.email);
+            localStorage.removeItem(user.Email);
             parentNode.removeChild(childHTML);
            }
+           editBtn.onclick=() =>{
+            
+            if(editBtn.value =='Edit'){
+              localStorage.removeItem(user.Email);
+              parentNode.removeChild(childHTML);
+              document.getElementById('name').value=user.Name;
+              document.getElementById('email').value=user.Email;
+              document.getElementById('phone').value=user.Number;
+              
+            
+
+            }
+           }
            childHTML.appendChild(deleteButton);
+           childHTML.appendChild(editBtn);
            parentNode.appendChild(childHTML);
+           
         }
            
         
