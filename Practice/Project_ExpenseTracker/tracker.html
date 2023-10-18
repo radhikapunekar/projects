@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="styletrack.css">
+  </head>
+  <body>
+    <header>
+      <h1>Expense Tracker</h1>
+    </header>
+
+    <section class="container">
+      <form id="my-form" onsubmit="saveToLocalStorage(event)">
+        <h1>Add Details</h1>
+        <div class="msg"></div>
+        <div>
+          <label for="expenseamount">Choose ExpenseAmount:</label>
+          <input type="number" id="num" class="num" name="number" required >
+        </div>
+        <div>
+          <label for="description">Choose Description:</label>
+          <input type="text" id="detail" class="detail" name="description" required >
+        </div>
+        <div>
+            <label for="category">Choose Category:</label>
+            <select id="cat" class="cat" name="category">
+                <option value="fuel">Fuel</option>
+                <option value="movie">Movie</option>
+                <option value="electricity">Electricity</option>
+            </select>
+           <!--<input type="tel" id="phone" name="phonenumber" autocomplete="off" required >-->
+           <button type="submit" class="btn btn-dark" value="Submit">Add Expense</button>
+           
+        </div>
+        <div>
+      </div>
+     </form>
+       <h2>Details of Expenses</h2>
+       <ul id="list-of-users"></ul>
+    </section>
+    <script>
+        onload=function() {
+            loadAndDisplayUserData();
+        }
+       function loadAndDisplayUserData(){
+        const parentElem=document.getElementById('list-of-users');
+        parentElem.innerHTML='';
+        for(let key in localStorage){
+            if(localStorage.hasOwnProperty(key)){
+                const userData=JSON.parse(localStorage.getItem(key));
+                if(Array.isArray(userData)){
+                    userData.forEach(user=>{
+                        showNewUserOnScreen(parentElem,user);
+                    });
+                }else{
+                    showNewUserOnScreen(parentElem,userData)
+                }
+            }
+        }
+       }
+       function saveToLocalStorage(event){
+        event.preventDefault();
+        const num= event.target.number.value;
+        const detail=event.target.description.value;
+        const cate =event.target.category.value;
+        
+        const userkey =detail;
+
+        let existingData=JSON.parse(localStorage.getItem(userkey))|| [];
+
+        let userData={num,detail,cate};
+        existingData.push(userData);
+        
+        localStorage.setItem(userkey,JSON.stringify(existingData));
+
+        event.target.number.value="";
+        event.target.description.value="";
+        event.target.category.value="";
+        
+        showNewUserOnScreen(document.getElementById('list-of-users'),userData);
+
+      }
+      function showNewUserOnScreen(parentElem,user){
+        const childElem=document.createElement('li');
+        childElem.textContent=user.num +'-'+ user.detail +'-'+ user.cate;
+        parentElem.appendChild(childElem);
+
+        const deleteButton = document.createElement('input');
+            deleteButton.type="button";
+            deleteButton.value='Delete';
+
+            const editBtn=document.createElement('input');
+            editBtn.type="button";
+            editBtn.value='Edit';
+            deleteButton.onclick=() => {
+             localStorage.removeItem(user.detail);
+             parentElem.removeChild(childElem);
+            }
+            editBtn.onclick=() =>{
+            
+             if(editBtn.value =='Edit'){
+               localStorage.removeItem(user.detail);
+               parentElem.removeChild(childElem);
+               document.getElementById('num').value=user.num;
+               document.getElementById('detail').value=user.detail;
+               document.getElementById('cat').value=user.cate;
+              
+            
+
+             }
+            }
+            childElem.appendChild(deleteButton);
+            childElem.appendChild(editBtn);
+            parentElem.appendChild(childElem);
+           
+      }
+    </script>
+
+  </body>
+  
+</html>
