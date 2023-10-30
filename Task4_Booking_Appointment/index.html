@@ -18,24 +18,24 @@
         <div class="msg"></div>
         <div>
           <label for="name">Name:</label>
-          <input type="text" id="name" name="username" required>
+          <input type="text" id="name" name="username" autocomplete="off" required >
         </div>
         <div>
           <label for="email">Email:</label>
-          <input type="text" id="email" name="emailId" required>
+          <input type="text" id="email" name="emailId" autocomplete="off" required >
         </div>
         <div>
             <label for="phone">Mobile No:</label>
-            <input type="tel" id="phone" name="phonenumber" required>
+            <input type="tel" id="phone" name="phonenumber" autocomplete="off" required >
         </div>
         <div>
       </div>
-        <input class="btn" type="submit" value="Submit">
+        <input class="btn" type="submit"  value="Submit">
       </form>
        <h2>List of Users</h2>
        <ul id="list-of-users"></ul>
     </section>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
     <script>
   
         function saveToLocalStorage(event){
@@ -50,9 +50,13 @@
           // localStorage.setItem('email',Email);
           // localStorage.setItem('number',Number);
            const obj ={Name,Email,Number}
-           localStorage.setItem(obj.Email,JSON.stringify(obj));
-          
-           showNewUserOnScreen(obj);
+           //localStorage.setItem(obj.Email,JSON.stringify(obj));
+           axios.post("https://crudcrud.com/api/46892d5221944538aba3e20e16fa9b29/appointmentData",obj)
+           .then(response => {
+            showNewUserOnScreen(response.data)
+            console.log(response)})
+           .catch(error => console.log(error))
+          // showNewUserOnScreen(obj);
        
        }   
        function showNewUserOnScreen(user){
@@ -61,33 +65,33 @@
            const childHTML = document.createElement('li')
             childHTML.textContent= user.Name + ' - ' +user.Email +' - '+ user.Number ;
 
-           const deleteButton = document.createElement('input');
-           deleteButton.type="button";
-           deleteButton.value='Delete';
+            const deleteButton = document.createElement('input');
+            deleteButton.type="button";
+            deleteButton.value='Delete';
 
-           const editBtn=document.createElement('input');
-           editBtn.type="button";
-           editBtn.value='Edit';
-           deleteButton.onclick=() => {
-            localStorage.removeItem(user.Email);
-            parentNode.removeChild(childHTML);
-           }
-           editBtn.onclick=() =>{
+            const editBtn=document.createElement('input');
+            editBtn.type="button";
+            editBtn.value='Edit';
+            deleteButton.onclick=() => {
+             localStorage.removeItem(user.Email);
+             parentNode.removeChild(childHTML);
+            }
+            editBtn.onclick=() =>{
             
-            if(editBtn.value =='Edit'){
-              localStorage.removeItem(user.Email);
-              parentNode.removeChild(childHTML);
-              document.getElementById('name').value=user.Name;
-              document.getElementById('email').value=user.Email;
-              document.getElementById('phone').value=user.Number;
+             if(editBtn.value =='Edit'){
+               localStorage.removeItem(user.Email);
+               parentNode.removeChild(childHTML);
+               document.getElementById('name').value=user.Name;
+               document.getElementById('email').value=user.Email;
+               document.getElementById('phone').value=user.Number;
               
             
 
+             }
             }
-           }
-           childHTML.appendChild(deleteButton);
-           childHTML.appendChild(editBtn);
-           parentNode.appendChild(childHTML);
+            childHTML.appendChild(deleteButton);
+            childHTML.appendChild(editBtn);
+            parentNode.appendChild(childHTML);
            
         }
            
