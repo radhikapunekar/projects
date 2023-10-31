@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Appointment Booking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Appointment Booking</h1>
+  </header>
+
+  <section class="container">
+    <form id="my-form" onsubmit="saveToLocalStorage(event)">
+      <h1>Add User</h1>
+      <div class="msg"></div>
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="username" autocomplete="off" required>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="emailId" autocomplete="off" required>
+      </div>
+      <div>
+        <label for="phonenumber">Mobile No:</label>
+        <input type="tel" id="phonenumber" name="phonenumber" autocomplete="off" required>
+      </div>
+    </div>
+      <input class="btn" type="submit" value="Submit">
+    </form>
+     <h2>List of Users</h2>
+     <ul id="list-of-users"></ul>
+  </section>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  <script>
+    let editUserId = undefined;
+
+    function saveToLocalStorage(event) {
+      event.preventDefault();
+      let Name = event.target.name.value;
+      let Email = event.target.email.value;
+      let Number = event.target.phonenumber.value;
+
+      const obj = { Name, Email, Number };
+
+      if (editUserId) {
+        // Update the user
+        axios
+          .put(`https://crudcrud.com/api/9d75d240e3f346eaaac3f23a5940e524/appointmentData/${editUserId}`, obj)
+          .then(() => {
+            // Update the user on the screen
+            document.getElementById(user._id).textContent = `${obj.Name} - ${obj.Email} - ${obj.Number}-${obj.editUserId}`;
+          })
+          .catch((error) => console.log(error));
+      } else {
+        // Create a new user
+        axios
+          .post("https://crudcrud.com/api/9d75d240e3f346eaaac3f23a5940e524/appointmentData", obj)
+          .then((response) => {
+            showNewUserOnScreen(response.data);
+          })
+          .catch((error) => console.log(error));
+      }
+
+      // Reset the form
+      event.target.reset();
+      editUserId = undefined;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      axios
+        .get("https://crudcrud.com/api/9d75d240e3f346eaaac3f23a5940e524/appointmentData")
+        .then((response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            showNewUserOnScreen(response.data[i]);
+          }
+        })
+        .catch((error) => console.log(error));
+    });
+
+    function deleteUser(id) {
+      axios
+        .delete(`https://crudcrud.com/api/9d75d240e3f346eaaac3f23a5940e524/appointmentData/${id}`)
+        .then(() => {
+          const userElement = document.getElementById(`user-${id}`);
+          if (userElement) {
+            userElement.remove();
+          }
+        })
+        .catch((error) => console.log(error));
+    }
+
+    function showNewUserOnScreen(user) {
+      const parentNode = document.getElementById('list-of-users');
+      const childHTML = document.createElement('li');
+      childHTML.id = `${user._id}`;
+      childHTML.textContent = `${user.Name} - ${user.Email} - ${user.Number}`;
+
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.addEventListener('click', () => {
+        deleteUser(user._id);
+      });
+
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', () => {
+        editUserId = user._id;
+        document.getElementById('name').value = user.Name;
+        document.getElementById('email').value = user.Email;
+        document.getElementById('phonenumber').value = user.Number;
+      });
+
+      childHTML.appendChild(deleteButton);
+      childHTML.appendChild(editBtn);
+      parentNode.appendChild(childHTML);
+    }
+  </script>
+</body>
+</html>
